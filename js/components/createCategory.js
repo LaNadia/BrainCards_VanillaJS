@@ -1,4 +1,5 @@
 import { createElement } from "../helper/createElement.js";
+import { declOfNum } from "../helper/declOfNum.js";
 
 
 // this function  creates section category and returns 2 methods and categoryList
@@ -28,7 +29,7 @@ export const createCategory = (parent) => {
         item.dataset.id = data.id;
 
         const button = createElement('button', {
-            className: 'category__title',
+            className: 'category__card',
         });
 
         const buttonEdit = createElement('button', {
@@ -38,7 +39,6 @@ export const createCategory = (parent) => {
 
         const buttonDel = createElement('button', {
             className: 'category__btn category__del',
-            textContent: '',
             ariaLabel: 'удалить'
         });
 
@@ -49,8 +49,12 @@ export const createCategory = (parent) => {
 
         const spanPairs = createElement('span', {
             className: 'category__pairs',
-            textContent: `${data.length} пар`,
+            textContent: declOfNum(data.length, ['пара', 'пары', 'пар'])
         });
+
+        //function for ending declension
+
+        
         
         //append
 

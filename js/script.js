@@ -1,19 +1,18 @@
 import { createCategory } from "./components/createCategory.js";
+import { createEditCategory } from "./components/createEditcategory.js";
 import { createHeader } from "./components/createHeader.js";
 import { createElement } from "./helper/createElement.js";
-import { fetchCategories } from "./service/api.service.js";
+import { fetchCards, fetchCategories } from "./service/api.service.js";
 
 const initApp = async () => {
     const headerParent = document.querySelector('.header');
     const appElem = document.querySelector('#app');
 
-    //create header + add EventListeners
-    const headerObj = createHeader(headerParent);
-
     //function to display categories
-     const returnIndex = async(event) => {
+     const renderIndex = async(event) => {
             event?.preventDefault();
-            
+            allSectionUnmount();
+
             //getting data
             const categories = await fetchCategories();
     
@@ -30,17 +29,47 @@ const initApp = async () => {
     
     };
 
-    headerObj.headerLogoLink.addEventListener('click', returnIndex);
-    headerObj.headerBtn.addEventListener('click', () => {
-        categoryObj.unmount(); //delete if any categories displayed
-        headerObj.updateHeaderTitle('Новая категория');
-    })
+    
+    //create header + add EventListeners
+    const headerObj = createHeader(headerParent);
 
+    headerObj.headerLogoLink.addEventListener('click', renderIndex);
+    headerObj.headerBtn.addEventListener('click', () => {
+        allSectionUnmount();
+        headerObj.updateHeaderTitle('Новая категория');
+        editCategoryObj.mount();
+    })
 
     //creating category and getting 2 methods and category list as return
     const categoryObj = createCategory(app);
+
+    //listens on what card user clicked
+    categoryObj.categoryList.addEventListener('click', async ({target}) => {
+        const categoryItem = target.closest('.category__item');
+
+        if(!categoryItem) return;
+        if(target.closest('.category__edit')) {
+            const dataCards = await fetchCards(categoryItem.dataset.id);
+            allSectionUnmount();
+
+            headerObj.updateHeaderTitle('Редактирование');
+            editCategoryObj.mount(dataCards);
+        }
+    })
+
+    //creating edit category table
+    const editCategoryObj = createEditCategory(app);
+
+    const allSectionUnmount = () => {
+        [categoryObj, editCategoryObj].forEach(obj => obj.unmount());
+    };
+
+    //open card
+    // const createPairsObj = createPairs(app);
+
+
     
-    returnIndex()
+    renderIndex();
 
 };
 
