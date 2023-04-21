@@ -133,7 +133,7 @@ export const createEditCategory = (parent) => {
            const textOne = cellsOne[i].textContent.trim();
            const textTwo = cellsTwo[i].textContent.trim();
             if(textOne && textTwo){
-                data.pairs[i] = [textOne, textTwo]
+                data.pairs.push([textOne, textTwo]);
             }
         };
 
