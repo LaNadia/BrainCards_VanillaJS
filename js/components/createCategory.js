@@ -51,10 +51,6 @@ export const createCategory = (parent) => {
             className: 'category__pairs',
             textContent: declOfNum(data.length, ['пара', 'пары', 'пар'])
         });
-
-        //function for ending declension
-
-        
         
         //append
 

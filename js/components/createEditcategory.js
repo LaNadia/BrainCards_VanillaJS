@@ -63,17 +63,17 @@ export const createEditCategory = (parent) => {
     const createTrCell = (dataArr) => {
         const tr = createElement('tr');
 
-        const thThedOne = createElement('th', {
+        const thThedOne = createElement('td', {
             className: 'table__cell table__cell_one',
             textContent: dataArr[0],
             contentEditable: true,
         });
-        const thThedTwo = createElement('th', {
+        const thThedTwo = createElement('td', {
             className: 'table__cell table__cell_two',
             textContent: dataArr[1],
             contentEditable: true,
         });
-        const thThedThree = createElement('th', {
+        const thThedThree = createElement('td', {
             className: 'table__cell'
         });
         const delRow = createElement('button', {
@@ -121,6 +121,32 @@ export const createEditCategory = (parent) => {
         tBody.append(emptyRow)
     })
 
+    const parseData = () => {
+        const cellsOne = document.querySelectorAll('.table__cell_one');
+        const cellsTwo = document.querySelectorAll('.table__cell_two');
+
+        const pairs = [];
+
+        const data = { pairs: [] };
+        
+        for(let i = 0; i < cellsOne.length; i++){
+           const textOne = cellsOne[i].textContent.trim();
+           const textTwo = cellsTwo[i].textContent.trim();
+            if(textOne && textTwo){
+                data.pairs[i] = [textOne, textTwo]
+            }
+        };
+
+        if(title.textContent.trim() && title.textContent !== TITLE){
+            data.title = title.textContent.trim();
+        };
+
+        if(btnSave.dataset.id){
+            data.id = btnSave.dataset.id;
+        }
+
+        return data;
+    };
     
     const mount = (data = { title: TITLE, pairs: []}) => {
         tBody.textContent = '';
@@ -136,7 +162,10 @@ export const createEditCategory = (parent) => {
         const emptyRow = createTrCell(['', '']);
         tBody.append(...rows, emptyRow);
 
+        btnSave.dataset.id = data.id ? data.id : '';
+
         app.append(editCategory)
+        parseData()//del it
     };
 
     const unmount = () => {
@@ -144,6 +173,6 @@ export const createEditCategory = (parent) => {
     };
 
 
-    return {mount, unmount, }
+    return {mount, unmount, parseData, btnSave, btnCancel}
 }
 
